@@ -172,7 +172,7 @@ function captureFormSubmit(adventure) {
       adventure: adventure.id,
     };
     try {
-      const enteredDate = new reservationData.date();
+      const enteredDate = new Date(reservationData.date); // Create a Date object from the date string
       const currentDate = new Date();
 
       if (currentDate < enteredDate) {
@@ -191,10 +191,12 @@ function captureFormSubmit(adventure) {
           alert("Success!");
           location.reload();
         }
+      } else {
+        alert("Please enter a valid future date");
       }
     } catch (err) {
-      // console.log(err.message)
-      alert("Please enter valid date");
+      console.error(err.message);
+      alert("An error occurred while processing the reservation.");
     }
   });
   // 2. If the reservation is successful, show an alert with "Success!" and refresh the page. If the reservation fails, just show an alert with "Failed!".
