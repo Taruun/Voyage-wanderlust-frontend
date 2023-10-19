@@ -13,10 +13,11 @@ function getAdventureIdFromURL(search) {
 async function fetchAdventureDetails(adventureId) {
   // TODO: MODULE_ADVENTURE_DETAILS
   // 1. Fetch the details of the adventure by making an API call
-  // /adventures/detail?adventure=<adventure_id> 
+  // /adventures/detail?adventure=<adventure_id>
   try {
-    const response = await fetch
-    (`${config.backendEndpoint}/adventures/detail?adventure=${adventureId}`);
+    const response = await fetch(
+      `${config.backendEndpoint}/adventures/detail?adventure=${adventureId}`
+    );
     const json = await response.json();
     console.log(json);
     return json;
@@ -25,7 +26,6 @@ async function fetchAdventureDetails(adventureId) {
   }
 
   // Place holder for functionality to work in the Stubs
-  
 }
 
 //Implementation of DOM manipulation to add adventure details to DOM
@@ -36,14 +36,14 @@ function addAdventureDetailsToDOM(adventure) {
 
   // //Setting the subtitle
   // document.getElementById("adventure-subtitle").innerHTML = adventure.subtitle
-  
+
   // const adventureImages = document.querySelector("#photo-gallery")
   // adventureImages.innerHTML = `getAdventureImages.forEach((imageSrc)=>{
   //   <img src=${images}/>
   //   images.src = imageSrc
   //   adventureImages.append(images)
   // })`
-  
+
   // const adventureContent = document.querySelector("#adventure-content")
   // adventureContent.textContent = adventure.content
   document.getElementById("adventure-name").innerHTML = adventure.name;
@@ -68,7 +68,6 @@ function addAdventureDetailsToDOM(adventure) {
 
   //Setting the content
   document.getElementById("adventure-content").innerHTML = adventure.content;
-
 }
 
 //Implementation of bootstrap gallery component
@@ -94,46 +93,48 @@ function addBootstrapPhotoGallery(images) {
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Next</span>
   </button>
-</div>`
-  
-  photoGallery.innerHTML = photoGalleryInnerHtml
-  const carouselInner = document.querySelector(".carousel-inner")
+</div>`;
 
-  images.forEach((image, idx)=>{
-  const carouselItem = document.createElement("div")
-    if(idx === 0){
-      carouselItem.className = "carousel-item active"
-    }else{
-      carouselItem.className = "carousel-item"
+  photoGallery.innerHTML = photoGalleryInnerHtml;
+  const carouselInner = document.querySelector(".carousel-inner");
+
+  images.forEach((image, idx) => {
+    const carouselItem = document.createElement("div");
+    if (idx === 0) {
+      carouselItem.className = "carousel-item active";
+    } else {
+      carouselItem.className = "carousel-item";
     }
-    const imageElement = document.createElement("img")
-    imageElement.className = "d-block w-100 imageElement"
-    imageElement.src = image
+    const imageElement = document.createElement("img");
+    imageElement.className = "d-block w-100 imageElement";
+    imageElement.src = image;
 
     carouselItem.appendChild(imageElement);
     carouselInner.appendChild(carouselItem);
-
-  })
-  
+  });
 }
 
 //Implementation of conditional rendering of DOM based on availability
 function conditionalRenderingOfReservationPanel(adventure) {
   // TODO: MODULE_RESERVATIONS
   // 1. If the adventure is already reserved, display the sold-out message.
-  const reservationSoldout = document.querySelector("#reservation-panel-sold-out")
-  const reservationAvailable = document.querySelector("#reservation-panel-available")
-  const reservationPersonCost = document.querySelector("#reservation-person-cost")
+  const reservationSoldout = document.querySelector(
+    "#reservation-panel-sold-out"
+  );
+  const reservationAvailable = document.querySelector(
+    "#reservation-panel-available"
+  );
+  const reservationPersonCost = document.querySelector(
+    "#reservation-person-cost"
+  );
 
-  if(adventure.available){
-    reservationSoldout.style.display = "none"
-    reservationAvailable.style.display = "block"
-    reservationPersonCost.textContent = adventure.costPerHead
-
-  }else{
-    reservationSoldout.style.display = "block"
-    reservationAvailable.style.display = "none"
-
+  if (adventure.available) {
+    reservationSoldout.style.display = "none";
+    reservationAvailable.style.display = "block";
+    reservationPersonCost.textContent = adventure.costPerHead;
+  } else {
+    reservationSoldout.style.display = "block";
+    reservationAvailable.style.display = "none";
   }
 }
 
@@ -141,24 +142,20 @@ function conditionalRenderingOfReservationPanel(adventure) {
 function calculateReservationCostAndUpdateDOM(adventure, persons) {
   // TODO: MODULE_RESERVATIONS
   // 1. Calculate the cost based on number of persons and update the reservation-cost field
-  const total = persons * adventure.costPerHead
+  const total = persons * adventure.costPerHead;
   // const reservationPersonCost = document.querySelector("#reservation-person-cost")
-  const reservationCost = document.querySelector("#reservation-cost")
+  const reservationCost = document.querySelector("#reservation-cost");
   // reservationPersonCost.textContent = adventure.costPerHead
-  reservationCost.textContent = total
-
-
-
-  
+  reservationCost.textContent = total;
 }
 
 //Implementation of reservation form submission
 function captureFormSubmit(adventure) {
   // TODO: MODULE_RESERVATIONS
   // 1. Capture the query details and make a POST API call using fetch() to make the reservation
-  const myForm = document.querySelector("#myForm")
-  myForm.addEventListener("submit", async (e)=>{
-  e.preventDefault()
+  const myForm = document.querySelector("#myForm");
+  myForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
     // const myFormELe = myForm.elements;
     // const reservationData = {
     //   name: myFormELe["name"].value,
@@ -166,32 +163,40 @@ function captureFormSubmit(adventure) {
     //   person: myFormELe["person"].value,
     //   adventure: adventure.id
 
-    const {name, date, person} = myForm.elements
-    console.log(myForm.elements)
+    const { name, date, person } = myForm.elements;
+    console.log(myForm.elements);
     const reservationData = {
       name: name.value,
       date: date.value,
       person: person.value,
-      adventure: adventure.id
-    }
-    try{
-      const response = await fetch(`${config.backendEndpoint}/reservations/new`,{
-        method: "POST",
-        body: JSON.stringify(reservationData),
-        headers:{
-          'Content-Type': 'application/json' 
-        }
-      })
+      adventure: adventure.id,
+    };
+    try {
+      const enteredDate = new reservationData.date();
+      const currentDate = new Date();
 
-      if(response.ok){
-        alert("Success!")
-        location.reload()
+      if (currentDate < enteredDate) {
+        const response = await fetch(
+          `${config.backendEndpoint}/reservations/new`,
+          {
+            method: "POST",
+            body: JSON.stringify(reservationData),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.ok) {
+          alert("Success!");
+          location.reload();
+        }
       }
-    }catch(err){
-      console.log(err.message)
-      alert("Failed!")
-    } 
-  })
+    } catch (err) {
+      // console.log(err.message)
+      alert("Please enter valid date");
+    }
+  });
   // 2. If the reservation is successful, show an alert with "Success!" and refresh the page. If the reservation fails, just show an alert with "Failed!".
 }
 
@@ -199,13 +204,13 @@ function captureFormSubmit(adventure) {
 function showBannerIfAlreadyReserved(adventure) {
   // TODO: MODULE_RESERVATIONS
   // 1. If user has already reserved this adventure, show the reserved-banner, else don't
-  const reservedBanner = document.querySelector("#reserved-banner")
+  const reservedBanner = document.querySelector("#reserved-banner");
   // console.log("adventure.reserved:", adventure.reserved); // Log the value of reserved
 
-  if(adventure.reserved){
-   reservedBanner.style.display = "block"
-  }else{
-    reservedBanner.style.display = "none"
+  if (adventure.reserved) {
+    reservedBanner.style.display = "block";
+  } else {
+    reservedBanner.style.display = "none";
   }
 }
 
